@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "express-boiler.js",
+  "version": "0.0.1",
+  "description": "Simple boilerplate for Express.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nowk/express-boiler.js.git"
+  },
+  "author": "Yung Hwa Kwon <yung.kwon@damncarousel.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nowk/express-boiler.js/issues"
+  },
+  "dependencies": {
+    "express-resource": "~1.0.0",
+    "jade": "~1.3.0",
+    "node-sass": "~0.8.3",
+    "express": "~3.4.8",
+    "mongoose": "~3.8.8"
+  }
+}
