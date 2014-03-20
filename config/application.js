@@ -49,19 +49,29 @@ app.configure(function() {
  * Environment Configure
  */
 
-var environments = ['development', 'test', 'staging', 'production'];
-environments.map(configure);
+var environment = process.env.NODE_ENV || 'development'
+  , enviroments = ['all', environment];
 
-function configure(environment) {
-  var conf = Conf[environment]
-    , middlewares = conf.middlewares;
+if (environment in Conf) {
+  enviroments.map(configure.bind(app));
+} else {
+  process.on('exit', function() {
+    console.log('No configuration for enviroment: "'+environment+'"');
+  });
+  process.exit();
+}
 
-  app.configure(environment, function() {
-    app.set('databaseUrl', conf.databaseUrl);
+function configure(env) {
+  var conf = Conf[env]
+    , middlewares = conf.middlewares
+    , locals = conf.locals;
 
+  this.configure(environment, function() {
+    this.set('databaseUrl', conf.databaseUrl);
+    this.locals(locals || {});
     for(var key in middlewares) {
       if (middlewares.hasOwnProperty(key)) {
-        app.use(middlewares[key]);
+        this.use(middlewares[key]);
       }
     }
   });
