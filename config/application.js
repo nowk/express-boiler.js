@@ -1,7 +1,7 @@
 /* jshint laxcomma: true, node: true */
 
 var express = require('express')
-  , Resource = require('express-resource')
+  , Resourceful = require('express-resourceful.js')
   , sass = require('node-sass');
 
 var app = express()

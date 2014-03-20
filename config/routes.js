@@ -1,6 +1,8 @@
 /* jshint laxcomma: true, node: true */
 
+
 exports.draw = function() {
-  this.resource('/', require('../app/controllers/default'));
+  var app = this;
+  app.resources('/', require('../app/controllers/default'));
 };
 
