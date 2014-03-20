@@ -38,10 +38,10 @@ app.configure(function() {
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(app.router);
+  app.use(express.csrf());
   app.use(sassMiddleware);
   app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
   app.use(express.static(__dirname+'/../public'));
-  app.use(express.csrf());
 });
 
 
