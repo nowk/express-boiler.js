@@ -23,6 +23,7 @@ module.exports = {
   },
   test: {
     databaseUrl: null,
+    middlewares: {},
     locals: {}
   },
   staging: {
@@ -34,6 +35,7 @@ module.exports = {
   },
   production: {
     databaseUrl: null,
+    middlewares: {},
     locals: {}
   }
 };
