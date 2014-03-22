@@ -39,6 +39,10 @@ app.configure(function() {
   app.use(express.urlencoded());
   app.use(app.router);
   app.use(express.csrf());
+  app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+  });
   app.use(sassMiddleware);
   app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
   app.use(express.static(__dirname+'/../public'));
