@@ -1,18 +1,19 @@
 /* jshint laxcomma: true, node: true */
 
-var express = require('express')
-  , Resourceful = require('express-resourceful.js')
-  , sass = require('node-sass');
+var express = require('express');
+var Resourceful = require('express-resourceful.js');
+var sass = require('node-sass');
 
-var app = express()
-  , Conf = require('./conf')
-  , Routes = require('./routes')
-  , sassMiddleware = sass.middleware({
-      src: __dirname + '/../app/assets',
-      dest: __dirname + '/../public',
-      // force: true,
-      // debug: true
-    });
+var app = express();
+var Conf = require('./conf');
+var Routes = require('./routes');
+
+var sassMiddleware = sass.middleware({
+  src: __dirname + '/../app/assets',
+  dest: __dirname + '/../public',
+  // force: true,
+  // debug: true
+});
 
 
 /*
@@ -53,8 +54,8 @@ app.configure(function() {
  * Environment Configure
  */
 
-var environment = process.env.NODE_ENV || 'development'
-  , enviroments = ['all', environment];
+var environment = process.env.NODE_ENV || 'development';
+var enviroments = ['all', environment];
 
 if (environment in Conf) {
   enviroments.map(configure.bind(app));
@@ -66,9 +67,9 @@ if (environment in Conf) {
 }
 
 function configure(env) {
-  var conf = Conf[env]
-    , middlewares = conf.middlewares
-    , locals = conf.locals;
+  var conf = Conf[env];
+  var middlewares = conf.middlewares;
+  var locals = conf.locals;
 
   var self = this;
 

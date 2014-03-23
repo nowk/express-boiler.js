@@ -1,10 +1,10 @@
 /* jshint laxcomma: true, node: true */
 
-var app = require('./config/application')
-  , db = require('./config/database');
+var app = require('./config/application');
+var db = require('./config/database');
 
-var PORT = app.get('port')
-  , databaseUrl = app.get('databaseUrl');
+var PORT = app.get('port');
+var databaseUrl = app.get('databaseUrl');
 
 
 /*
