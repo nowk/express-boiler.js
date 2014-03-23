@@ -70,13 +70,13 @@ function configure(env) {
     , middlewares = conf.middlewares
     , locals = conf.locals;
 
-  this.configure(environment, function() {
-    this.set('databaseUrl', conf.databaseUrl);
-    this.locals(locals || {});
+  var self = this;
+
+  self.configure(environment, function() {
+    self.set('databaseUrl', conf.databaseUrl);
+    self.locals(locals || {});
     for(var key in middlewares) {
-      if (middlewares.hasOwnProperty(key)) {
-        this.use(middlewares[key]);
-      }
+      self.use(middlewares[key]);
     }
   });
 }
