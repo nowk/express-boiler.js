@@ -1,6 +1,6 @@
 /* jshint laxcomma: true, node: true */
 
-exports.index = function(req, res) {
+module.exports = function(req, res) {
   res.render('default');
 };
 

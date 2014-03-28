@@ -3,6 +3,8 @@
 
 exports.draw = function() {
   var app = this;
-  app.resources('/', require('../app/controllers/default'));
+
+  // root last
+  app.get('/', require('../app/controllers/default'));
 };
 
