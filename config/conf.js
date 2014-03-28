@@ -1,6 +1,7 @@
 /* jshint laxcomma: true, node: true */
 
 var express = require('express');
+var errorHandler = require('../lib/middlewares/error_handler');
 
 
 /*
@@ -9,33 +10,37 @@ var express = require('express');
 
 module.exports = {
   all: {
-    middlewares: {},
+    middlewares: [],
     locals: {}
   },
   development: {
     databaseUrl: null,
-    middlewares: {
-      justNext: function(req, res, next) {
+    middlewares: [
+      function(req, res, next) {
         next();
-      }
-    },
+      },
+      errorHandler
+    ],
     locals: {}
   },
   test: {
     databaseUrl: null,
-    middlewares: {},
+    middlewares: [],
     locals: {}
   },
   staging: {
     databaseUrl: null,
-    middlewares: {
-      basicAuth: express.basicAuth(process.env.BASICAUTH_LOGIN, process.env.BASICAUTH_PASSWD)
-    },
+    middlewares: [
+      express.basicAuth(process.env.BASICAUTH_LOGIN, process.env.BASICAUTH_PASSWD),
+      errorHandler
+    ],
     locals: {}
   },
   production: {
     databaseUrl: null,
-    middlewares: {},
+    middlewares: [
+      errorHandler
+    ],
     locals: {}
   }
 };

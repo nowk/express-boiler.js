@@ -71,13 +71,11 @@ function configure(env) {
   var middlewares = conf.middlewares;
   var locals = conf.locals;
 
-  var self = this;
-
-  self.configure(environment, function() {
-    self.set('databaseUrl', conf.databaseUrl);
-    self.locals(locals || {});
-    for(var key in middlewares) {
-      self.use(middlewares[key]);
+  this.configure(environment, function() {
+    this.set('databaseUrl', conf.databaseUrl);
+    this.locals(locals || {});
+    for(var i=0; i<middlewares.length; i++) {
+      this.use(middlewares[i]);
     }
   });
 }
