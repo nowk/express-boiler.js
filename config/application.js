@@ -35,9 +35,9 @@ app.configure(function() {
   app.use(express.cookieParser('secret'));
   app.use(express.session({secret: 'ahugesecret'}));
   app.use(express.compress());
-  app.use(express.methodOverride());
   app.use(express.json());
   app.use(express.urlencoded());
+  app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.csrf());
   app.use(function(req, res, next) {
