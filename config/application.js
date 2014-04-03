@@ -32,18 +32,18 @@ app.configure(function() {
   app.set('views', __dirname+'/../app/views');
   app.set('view engine', 'jade');
 
-  app.use(express.cookieParser('secret'));
-  app.use(express.session({secret: 'ahugesecret'}));
   app.use(express.compress());
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(express.methodOverride());
-  app.use(app.router);
+  app.use(express.cookieParser('secret'));
+  app.use(express.session({secret: 'ahugesecret'}));
   app.use(express.csrf());
   app.use(function(req, res, next) {
     res.locals.csrfToken = req.csrfToken();
     next();
   });
+  app.use(app.router);
   app.use(sassMiddleware);
   app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
   app.use(express.static(__dirname+'/../public'));
