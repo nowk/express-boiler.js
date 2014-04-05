@@ -7,6 +7,7 @@ var sass = require('node-sass');
 var app = express();
 var Conf = require('./conf');
 var Routes = require('./routes');
+var Csrf = require('../lib/csrf');
 
 var sassMiddleware = sass.middleware({
   src: __dirname + '/../app/assets',
@@ -38,16 +39,11 @@ app.configure(function() {
   app.use(express.methodOverride());
   app.use(express.cookieParser('secret'));
   app.use(express.session({secret: 'ahugesecret'}));
-
-  // FIXME find another way to isolate out CSRF for testing
-  if (process.env.DISABLE_CSRF && "test" === process.env.NODE_ENV) {
-    app.use(express.csrf());
-    app.use(function(req, res, next) {
-      res.locals.csrfToken = req.csrfToken();
-      next();
-    });
-  }
-
+  app.use(Csrf.csrf());
+  app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+  });
   app.use(app.router);
   app.use(sassMiddleware);
   app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
