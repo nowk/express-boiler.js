@@ -38,11 +38,16 @@ app.configure(function() {
   app.use(express.methodOverride());
   app.use(express.cookieParser('secret'));
   app.use(express.session({secret: 'ahugesecret'}));
-  app.use(express.csrf());
-  app.use(function(req, res, next) {
-    res.locals.csrfToken = req.csrfToken();
-    next();
-  });
+
+  // FIXME find another way to isolate out CSRF for testing
+  if (process.env.DISABLE_CSRF && "test" === process.env.NODE_ENV) {
+    app.use(express.csrf());
+    app.use(function(req, res, next) {
+      res.locals.csrfToken = req.csrfToken();
+      next();
+    });
+  }
+
   app.use(app.router);
   app.use(sassMiddleware);
   app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
