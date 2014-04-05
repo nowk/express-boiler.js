@@ -10,7 +10,9 @@ var errorHandler = require('../lib/middlewares/error_handler');
 
 module.exports = {
   all: {
-    middlewares: [],
+    middlewares: [
+      errorHandler
+    ],
     locals: {}
   },
   development: {
@@ -18,8 +20,7 @@ module.exports = {
     middlewares: [
       function(req, res, next) {
         next();
-      },
-      errorHandler
+      }
     ],
     locals: {}
   },
@@ -31,16 +32,13 @@ module.exports = {
   staging: {
     databaseUrl: null,
     middlewares: [
-      express.basicAuth(process.env.BASICAUTH_LOGIN, process.env.BASICAUTH_PASSWD),
-      errorHandler
+      express.basicAuth(process.env.BASICAUTH_LOGIN, process.env.BASICAUTH_PASSWD)
     ],
     locals: {}
   },
   production: {
     databaseUrl: null,
-    middlewares: [
-      errorHandler
-    ],
+    middlewares: [],
     locals: {}
   }
 };
