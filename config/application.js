@@ -7,7 +7,7 @@ var sass = require('node-sass');
 var app = express();
 var Conf = require('./conf');
 var Routes = require('./routes');
-var Csrf = require('../lib/csrf');
+var Csrf = require('../lib/middlewares/csrf');
 
 var sassMiddleware = sass.middleware({
   src: __dirname + '/../app/assets',
