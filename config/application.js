@@ -44,10 +44,6 @@ app.configure(function() {
     res.locals.csrfToken = req.csrfToken();
     next();
   });
-  app.use(app.router);
-  app.use(sassMiddleware);
-  app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
-  app.use(express.static(__dirname+'/../public'));
 });
 
 
@@ -80,6 +76,18 @@ function configure(env) {
     }
   });
 }
+
+
+/*
+ * continue configure
+ */
+
+app.configure(function() {
+  app.use(app.router);
+  app.use(sassMiddleware);
+  app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
+  app.use(express.static(__dirname+'/../public'));
+});
 
 
 /*
