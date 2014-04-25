@@ -1,98 +1,67 @@
-/* jshint laxcomma: true, node: true */
+/* jshint node: true */
 
 var express = require('express');
+
+var MiddleEarth = require('middle-earth');
 var Resourceful = require('express-resourceful.js');
-var sass = require('node-sass');
 
-var app = express();
-var Conf = require('./conf');
-var Routes = require('./routes');
-var Csrf = require('../lib/middlewares/csrf');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var compress = require('compression');
+var morgan = require('morgan');
 
-var sassMiddleware = sass.middleware({
-  src: __dirname + '/../app/assets',
-  dest: __dirname + '/../public',
-  // force: true,
-  // debug: true
-});
+var Csrf = require('../lib/csrf');
 
 
 /*
- * Expose app
+ * route configuration
  */
 
-module.exports = exports = app;
+var Routes = require('./routes');
+
+
+/*
+ * app + expose
+ */
+
+var app = module.exports = express();
 
 
 /*
  * Configure
  */
 
-app.configure(function() {
-  app.set('port', process.env.PORT||1337);
-  app.set('views', __dirname+'/../app/views');
-  app.set('view engine', 'jade');
+app.set('port', (process.env.PORT || 1337));
+app.set('views', __dirname+'/../app/views');
+app.set('view engine', 'jade');
 
-  app.use(express.compress());
-  app.use(express.json());
-  app.use(express.urlencoded());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser('secret'));
-  app.use(express.session({secret: 'ahugesecret'}));
-  app.use(Csrf.csrf());
-  app.use(function(req, res, next) {
-    res.locals.csrfToken = req.csrfToken();
-    next();
-  });
-});
-
-
-/*
- * Environment Configure
- */
-
-var environment = process.env.NODE_ENV || 'development';
-var enviroments = ['all', environment];
-
-if (environment in Conf) {
-  enviroments.map(configure.bind(app));
-} else {
-  process.on('exit', function() {
-    console.log('No configuration for enviroment: "'+environment+'"');
-  });
-  process.exit();
-}
-
-function configure(env) {
-  var conf = Conf[env];
-  var middlewares = conf.middlewares;
-  var locals = conf.locals;
-
-  this.configure(environment, function() {
-    this.set('databaseUrl', conf.databaseUrl);
-    this.locals(locals || {});
-    for(var i=0; i<middlewares.length; i++) {
-      this.use(middlewares[i]);
-    }
-  });
-}
+app
+  .middlewares([
+    {name: 'compress', cb: compress()},
+    {name: 'body-parser', cb: bodyParser()},
+    {name: 'method-override', cb: methodOverride()},
+    {name: 'cookie-parser', cb: cookieParser('secret')},
+    {name: 'session', cb: session({secret: 'secret', key: 'sid', cookie: {secure: true}})},
+    {name: 'csrf', cb: Csrf.csrf()},
+    {name: 'csrf-local-token', cb: Csrf.localToken()},
+    {name: 'static', cb: express.static(__dirname+'/../public')},
+  ])
+  .before('static', {name: 'routes', fn: Routes.draw.bind(app)})
+  .before('routes', {name: 'logger', cb: morgan({format: 'dev', immediate: true})});
 
 
 /*
- * continue configure
+ * TODO env configurations
  */
-
-app.configure(function() {
-  app.use(app.router);
-  app.use(sassMiddleware);
-  app.use('/build', express.static(__dirname + '/../build')); // component.js build folder
-  app.use(express.static(__dirname+'/../public'));
-});
 
 
 /*
- * Routes
+ * finish
  */
 
-Routes.draw.call(app);
+app
+  .middlewares()
+  .finish();
 

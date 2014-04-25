@@ -4,7 +4,8 @@
 exports.draw = function() {
   var app = this;
 
+
   // root last
-  app.get('/', require('../app/controllers/default'));
+  app.resource('/', require('../app/controllers/default'));
 };
 
