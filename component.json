@@ -1,6 +1,0 @@
-{
-  "name": "express-boiler.js",
-  "dependencies": {
-    "components/jquery": "2.1.0"
-  }
-}
