@@ -34,7 +34,8 @@
     "express-session": "^1.0.2",
     "middle-earth": "0.0.3",
     "mobile-detect": "^0.1.0",
-    "morgan": "^1.0.0"
+    "morgan": "^1.0.0",
+    "http-auth": "^2.1.7"
   },
   "devDependencies": {
     "chai": "^1.9.1",

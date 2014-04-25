@@ -9,8 +9,6 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var compress = require('compression');
-var morgan = require('morgan');
 
 var Csrf = require('../lib/csrf');
 
@@ -39,7 +37,6 @@ app.set('view engine', 'jade');
 
 app
   .middlewares([
-    {name: 'compress', cb: compress()},
     {name: 'body-parser', cb: bodyParser()},
     {name: 'method-override', cb: methodOverride()},
     {name: 'cookie-parser', cb: cookieParser('secret')},
@@ -48,13 +45,15 @@ app
     {name: 'csrf-local-token', cb: Csrf.localToken()},
     {name: 'static', cb: express.static(__dirname+'/../public')},
   ])
-  .before('static', {name: 'routes', fn: Routes.draw.bind(app)})
-  .before('routes', {name: 'logger', cb: morgan({format: 'dev', immediate: true})});
+  .before('static', {name: 'routes', fn: Routes.draw.bind(app)});
 
 
 /*
- * TODO env configurations
+ * env configuration
  */
+
+var environment = require('./environment');
+environment.apply(app);
 
 
 /*
