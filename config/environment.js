@@ -1,6 +1,7 @@
 /* jshint node: true */
 
 
+
 module.exports = function() {
   var node_env = (process.env.NODE_ENV || 'development');
   var app = this;
@@ -9,7 +10,8 @@ module.exports = function() {
    * all environment configurations
    */
 
-  //...
+  var conf = require('./conf')[node_env];
+  app.set('databaseUrl', conf.databaseUrl);
 
 
   /*
