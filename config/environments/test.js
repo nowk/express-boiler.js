@@ -17,6 +17,7 @@ module.exports = function() {
 
   app
     .middlewares()
+    .remove('livereload')
     .remove('logger');
 };
 

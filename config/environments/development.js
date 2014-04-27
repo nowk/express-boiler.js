@@ -4,6 +4,7 @@ var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
 var lessMiddleware = require('less-middleware');
+var livereload = require('connect-livereload');
 
 
 module.exports = function() {
@@ -35,6 +36,7 @@ module.exports = function() {
 
   app
     .middlewares()
+    .before('routes', {name: 'livereload', cb: livereload()})
     .before('routes', {name: 'logger', cb: morgan({format: 'dev', immediate: true})})
     .before('static', {name: 'assets-js', cb: assetsjs, path: '/javascripts'})
     .after('assets-js', {name: 'less', cb: less})
