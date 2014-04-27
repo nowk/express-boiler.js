@@ -101,6 +101,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
 
 
+  /*
+   * TODO mochaTests whould run under "real life" conditions, so development
+   * assets-js/css middlewares need to be removed so we can use the uglified and lessed
+   * versions that were produced in the build task
+   */
+
   grunt.registerTask('build', ['jshint', 'uglify', 'less', 'mochaTest']);
   grunt.registerTask("devs", ['express:development', 'watch']);
 };

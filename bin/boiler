@@ -1,0 +1,131 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var path = require('path');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+
+var srcpath = path.resolve(__dirname, '../src');
+var skipexts = ['.swp', '.swo'];
+
+
+program
+  .version('0.0.1')
+  .usage('new <name>');
+
+
+program
+  .command('new')
+  .description('create a new express-boiler application')
+  .action(function(name) {
+    if('string' != typeof name) {
+      var msg = '<name> is a required arguement';
+      return program.emit('error', msg);
+    }
+
+    var destpath = path.resolve(name);
+    name = path.basename(destpath); // handle ./
+    program.emit('start', name, destpath);
+
+    // create the main app folder
+    mkdirp.sync(destpath);
+
+    // copy over files (and create any other dirs along the way)
+    var srcfiles = fs.readdirSync(srcpath);
+    srcfiles.map(copySrc(null, destpath));
+
+    // edit package json with new app name
+    var packagejson = path.join(destpath, 'package.json');
+    var json = JSON.parse(fs.readFileSync(packagejson, 'utf-8'));
+    json.name = name;
+
+    fs.writeFileSync(packagejson, JSON.stringify(json, null, 2)); // write back out
+
+    // fin
+    program.emit('end', name);
+  });
+
+
+program
+  .on('help', function() {
+    console.log("  Examples:\n");
+    console.log("    boiler new todo-app\n");
+  });
+
+program
+  .on('start', function(name, destpath) {
+    console.log('');
+    console.log('  Creating app...');
+    console.log('  ['+name+']', destpath);
+    console.log('');
+  });
+
+program
+  .on('end', function(name) {
+    console.log('');
+    console.log('  You are ready to start building your application:', name);
+    console.log('');
+    console.log('    - Please be sure to edit the package.json');
+    console.log('    - Run `npm install` to install all the needed dependencies');
+    console.log('');
+    console.log('  Then you may run `grunt devs` to get the party started!');
+    console.log('  More info in the Grunfile.js');
+    console.log('');
+  });
+
+program
+  .on('error', function(msg) {
+    console.error('');
+    console.error('  [error]', msg);
+    console.error('');
+    program.emit('help');
+  });
+
+
+program.parse(process.argv);
+
+
+
+/*
+ * copy src files
+ *
+ * @param {String} basepath
+ * @param {String} destpath
+ * @return {Function}
+ */
+
+function copySrc(basepath, destpath) {
+  return function(name) {
+    var _spath = path.join((basepath || srcpath), name);
+    var _dpath = path.join(destpath, name);
+    var stat = fs.statSync(_spath);
+
+    if (stat.isDirectory()) {
+      // create the destination directory
+      mkdirp.sync(_dpath);
+
+      console.log('  [created]', _dpath);
+
+      // recurse source dir of it's files
+      var files = fs.readdirSync(_spath);
+      files.map(copySrc(_spath, _dpath));
+
+    } else {
+      var filename = path.basename(_spath);
+      var ext = path.extname(filename);
+
+      // skipexts is just for local development
+      if (skipexts.indexOf(ext) >= 0 || '.ds_store' === filename.toLowerCase()) {
+        return;
+      }
+
+      // copy files to new location
+      var destfile = path.join(destpath, filename);
+      var fd = fs.readFileSync(_spath, 'utf-8');
+      fs.writeFileSync(destfile, fd);
+
+      console.log('  [created]', destfile);
+    }
+  };
+}
+
