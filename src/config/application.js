@@ -47,7 +47,8 @@ app
     {name: 'static', cb: express.static(__dirname+'/../public')},
     {name: 'error-handler', cb: erros.handler({views: __dirname+'/app/views'})}
   ])
-  .before('static', {name: 'routes', fn: Routes.draw.bind(app)});
+  .before('static', {name: 'routes', fn: Routes.draw.bind(app)})
+  .before('error-handler', {name: 'error-404-handler', cb: erros.fouro4()});
 
 
 /*
