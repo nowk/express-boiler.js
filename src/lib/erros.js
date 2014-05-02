@@ -7,7 +7,7 @@ var erros = require('erros');
  * expose erros
  */
 
-module.exports = errors;
+module.exports = erros;
 
 
 // TODO this is kind of ugly and possible collision, setup domains
