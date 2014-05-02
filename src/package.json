@@ -32,7 +32,8 @@
     "middle-earth": "0.0.6",
     "mobile-detect": "^0.1.0",
     "morgan": "^1.0.0",
-    "http-auth": "^2.1.7"
+    "http-auth": "^2.1.7",
+    "erros": "^0.0.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",

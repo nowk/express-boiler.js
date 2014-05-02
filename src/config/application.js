@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
 var Csrf = require('../lib/csrf');
+var erros = require('../lib/erros');
 
 
 /*
@@ -44,6 +45,7 @@ app
     {name: 'csrf', cb: Csrf.csrf()},
     {name: 'csrf-local-token', cb: Csrf.localToken()},
     {name: 'static', cb: express.static(__dirname+'/../public')},
+    {name: 'error-handler', cb: erros.handler({views: __dirname+'/app/views'})}
   ])
   .before('static', {name: 'routes', fn: Routes.draw.bind(app)});
 
